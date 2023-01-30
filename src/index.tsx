@@ -1,55 +1,39 @@
-import React, {useState} from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
+import ReactDOM from 'react-dom'
 
-type UserType = {
-    id: number
-    name: string
-    age: number
+export const VideoHeader = (props: {videoName: string}) => {
+    return <div>
+        😀 {props.videoName}
+    </div>
+}
+export const VideoContent = (props: {videoContent: string}) => {
+    return <div>
+        📼 <a href={props.videoContent}>{props.videoContent}</a>
+    </div>
+}
+export const VideoDescription = (props: {videoDescription: string}) => {
+    return <div>
+        📑 {props.videoDescription}
+    </div>
 }
 
-function User(props: UserType) {
-    return (
-        <li>User {props.name}: {props.age} y.o.</li>
-    )
+export const YoutubeVideo = (props: any) => {
+    return <div>
+        <VideoHeader videoName={props.title} />
+        <VideoContent videoContent={props.link} />
+        <VideoDescription videoDescription={props.description} />
+    </div>
 }
 
-function UsersList() {
-    const state = [
-        {id: 1, name: "Bob", age: 34},
-        {id: 2, name: "Alex", age: 25},
-        {id: 3, name: "Ann", age: 30},
-        {id: 4, name: "John", age: 23},
-    ]
-    const users = [
-        {id: 1, userName: "Bob", age: 34},
-        {id: 2, userName: "Alex", age: 25},
-        {id: 3, userName: "Ann", age: 30},
-        {id: 4, userName: "John", age: 23},
-    ]
+export const App = () => {
+    const video = {
+        title: 'Samurai way',
+        link: 'https://www.youtube.com/watch?v=gb7gMluAeao&list=PLcvhF2Wqh7DNVy1OCUpG3i5lyxyBWhGZ8',
+        description: 'Best free react-course'
+    }
 
-    const [usersList, setUsersList] = useState<Array<UserType>>(state)
-    return (
-        <main>
-            <h5>User list: </h5>
-            <p>Тут будет список пользователей</p>
-        </main>
-    )
+    return <YoutubeVideo video={video} />
 }
 
-ReactDOM.render(
-    <UsersList/>, document.getElementById('root')
+ReactDOM.render(<App />,
+    document.getElementById('root')
 );
-// Что надо написать вместо XXX, чтобы код работал?
-// ❗ Если мы отмапим массив, то должны увидеть данные пользователей
-// ❗ Ответ дать минимально возможным объёмом кода
-
-
-
-
-
-
-
-
-
-
