@@ -1,39 +1,38 @@
-import ReactDOM from 'react-dom'
+import React, {useState, MouseEvent, ChangeEvent} from 'react';
+import ReactDOM from 'react-dom';
+import './index.css';
 
-export const VideoHeader = (props: {videoName: string}) => {
-    return <div>
-        😀 {props.videoName}
-    </div>
-}
-export const VideoContent = (props: {videoContent: string}) => {
-    return <div>
-        📼 <a href={props.videoContent}>{props.videoContent}</a>
-    </div>
-}
-export const VideoDescription = (props: {videoDescription: string}) => {
-    return <div>
-        📑 {props.videoDescription}
-    </div>
-}
-
-export const YoutubeVideo = (props: any) => {
-    return <div>
-        <VideoHeader videoName={props.video.title} />
-        <VideoContent videoContent={props.video.link} />
-        <VideoDescription videoDescription={props.video.description} />
-    </div>
-}
-
-export const App = () => {
-    const video = {
-        title: 'Samurai way',
-        link: 'https://www.youtube.com/watch?v=gb7gMluAeao&list=PLcvhF2Wqh7DNVy1OCUpG3i5lyxyBWhGZ8',
-        description: 'Best free react-course'
+function Notes() {
+    const [newNote, setNewNote] = useState<string>("")
+    const [notes, setNotes] = useState<Array<string>>([])
+    const onChangeHandler = (e: ChangeEvent<HTMLTextAreaElement> )=>
+        setNewNote(e.currentTarget.value)
+    const addNote = () => {
+        setNotes([newNote, ...notes])
+        setNewNote("")
     }
-
-    return <YoutubeVideo video={video} />
+    return (
+        <div>
+            <textarea
+                value={newNote}
+                onChange={onChangeHandler}
+                onBlur={addNote}
+            />
+            <div>
+                <button
+                    onClick={() => setNotes([])}
+                >Clear notes list</button>
+            </div>
+            <h4>Notes:</h4>
+            <div>
+                {notes.map(n => <p>{n}</p>)}
+            </div>
+        </div>
+    )
 }
 
-ReactDOM.render(<App />,
-    document.getElementById('root')
+ReactDOM.render(
+    <Notes/>, document.getElementById('root')
 );
+// Что надо написать вместо ххх,
+// чтобы при клике список заметок очищался?
