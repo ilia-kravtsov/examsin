@@ -1,4 +1,119 @@
 <!--
+_________________________________________________________________________________
+<script>
+    let users = ['dimych', 'valera', 'artem', 'katya']
+
+    yo();
+
+    if (users.length > 4) {
+        yo();
+    } else {
+
+    }
+
+    if (users.length < 2 || window !== null) {
+        yo()
+    }
+
+    for (let i=0;i<1;i++) {
+        yo()
+    }
+
+    function yo(){}
+
+</script> 3
+____________________________________________________________________________
+<script>
+    const hello = () => { alert('hello') }
+</script>
+
+<script>
+    function hello() { alert('hello') }
+</script>
+____________________________________________________________________________
+<script>
+    function removeWhitespaces(string) {
+        string.split(' ').filter(s => s !== '').join('_')
+    }
+
+    console.log(removeWhitespaces('you are JS developer'))
+</script> return
+____________________________________________________________________________
+<script>
+    let skills = ['css', 'html', 'js'];
+    skills.XXX('react');
+</script> push
+____________________________________________________________________________
+<script>
+    let user = {age: 0};
+    for (let i = 0; i < 10; i++) {
+        user.age = i;
+    }
+    console.log(user.age)
+</script>9
+____________________________________________________________________________
+<script>
+    let user = {
+        name: 'samurai',
+        age: 18
+    }
+
+    let user2 = user;
+
+    user2.name = 'ninja';
+    console.log(user.name)
+</script> ninja
+____________________________________________________________________________
+<script>
+    let user = {
+        name: "samurai",
+        age: 18
+    }
+    console.log(user.age)
+</script>
+
+<input id="search"/>
+<button id="find">find</button>
+____________________________________________________________________________
+<script>
+    const searchInputElement = document.getElementById('search')
+    const huntButtonElement = document.getElementById('find')
+
+    huntButtonElement.addEventListener('click', () => {
+        console.log(searchInputElement.value)
+    })
+
+    /*
+    Что нужно написать внутри скобок вместо XXX и YYY, чтобы при нажатии на кнопку увидеть текст, введённый в input?
+    Ответ дайте через пробел.
+    Пример ответа: firstword secondword
+    */
+
+</script>huntButtonElement 'click'
+_____________________________________________________________________________
+<input id="anxiety" value="it-incubator"/>
+
+<script>
+    const searchInputElement = document.querySelector('it-incubator');
+    searchInputElement.value = '';
+
+    /*
+    Что нужно написать внутри скобок вместо XXX, чтобы значение в поле ввода зачищалось?
+    */
+</script>'#anxiety'
+________________________________________________________________________________
+<input id="latvia" value="it-incubator"/>
+
+<script>
+    const inputElement = document.getElementById('latvia');
+    inputElement.value = '';
+
+    /* Что нужно написать вместо XXX, чтобы значение в поле ввода зачищалось?
+ В качестве ответа укажите строчку целиком.  */
+</script> getElementById
+-->
+
+-----------------------------------------------------------------------
 <script>
     let user = {age: 0};
     for (let i = 0; i < 10; i++) {
@@ -42,12 +157,12 @@ user.age = 9
 
 ________________________________________________ Monday week 1 _________________________________________________________
 export const Wrapper  = () => {
-return <Bonus city="minsk" />
+return <Courage city="minsk" />
 }
 type PropsType = {
 city: string
 }
-export const Bonus: React.FC<PropsType> = (props) => {
+export const Courage: React.FC<PropsType> = (props) => {
 return <div>hello</div>
 }
 
@@ -55,6 +170,8 @@ return <div>hello</div>
 В коде в разных местах допущена одна и та же ошибка.
 Какое слово должно быть написано вместо ошибочного?
 */
+
+Courage
 ________________________________________________________________________________________________________________________
 import ReactDOM from 'react-dom'
 
@@ -90,6 +207,7 @@ document.getElementById('root')
 //📼 Контент видео
 //📊 Статистика лайков
 // ❗ Ответ дать минимально возможным объёмом кода
+<VideoBlock/>
 ________________________________________________________________________________________________________________________
 type UserPropsType = {
 name: string
@@ -103,6 +221,8 @@ return <div>
 }
 
 //Что нужно написать вместо ххх, что бы код работал?
+
+props.description
 ________________________________________________________________________________________________________________________
 type PropsType = {
 city: string        // 'minsk'
@@ -119,6 +239,7 @@ return <div>hello</div>
 }
 
 // Что МИНИМАЛЬНО ДОСТАТОЧНО нужно дописать в строке 8 (cтрока с ошибкой), чтобы не было ошибки
+country='belarus'
 ________________________________________________________________________________________________________________________
 type PagePropsType = {
 age: number
@@ -138,6 +259,7 @@ return <div>name: {props.n}, age: {props.a}</div>
 
 // Что нужно написать вместо xxx и yyy?
 // Ответ дайте через пробел, например: blabla onClick(props)
+props.age props.name
 ________________________________________________________________________________________________________________________
 type NewsType = {
 title: string
@@ -166,6 +288,7 @@ return <div>
 </aside>
 </div>
 }
+mainArticle news
 ________________________________________________________________________________________________________________________
 type UserWalletType = {
     title: string
@@ -190,6 +313,8 @@ const wallets = [
         <UserWallet wallet={yyy} />
     </div>
 }
+wallets[0]
+wallets[1]
 ________________________________________________________________________________________________________________________
 import ReactDOM from 'react-dom'
 
@@ -211,9 +336,9 @@ return <div>
 
 export const YoutubeVideo = (props: any) => {
 return <div>
-<VideoHeader videoName={props.title} />
-<VideoContent videoContent={props.link} />
-<VideoDescription videoDescription={props.description} />
+<VideoHeader videoName={props.video.title} />
+<VideoContent videoContent={props.video.link} />
+<VideoDescription videoDescription={props.video.description} />
 </div>
 }
 
@@ -263,7 +388,72 @@ return <div>
 ReactDOM.render(<App/>,
 document.getElementById('root')
 )
+name
+fatherName
+sonName
 ________________________________________________________________________________________________________________________
+import ReactDOM from 'react-dom'
+
+const CrazyButton = (props: any) => {
+
+    const style = {
+        color: props.XXX,
+        backgroundColor: props.YYY
+    }
+
+    return <button style={style}>
+        {props.ZZZ}
+    </button>
+}
+
+export const App = () => {
+return <div>
+<CrazyButton title={'delete'} fontColor={'white'} bgColor={'red'}/>
+<CrazyButton title={'add'} fontColor={'white'} bgColor={'green'}/>
+</div>
+}
+
+ReactDOM.render(<App/>,
+document.getElementById('root')
+)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 ___________________________________________ Monday Week 3_______________________________________________________________
