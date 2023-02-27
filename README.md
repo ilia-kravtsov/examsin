@@ -110,7 +110,9 @@ ________________________________________________________________________________
 
     /* Что нужно написать вместо XXX, чтобы значение в поле ввода зачищалось?
  В качестве ответа укажите строчку целиком.  */
-</script> getElementById
+</script> 
+
+const inputElement = document.getElementById('latvia');
 -->
 
 -----------------------------------------------------------------------
@@ -866,6 +868,7 @@ ReactDOM.render(
 <UsersList/>, document.getElementById('root')
 );
 // Что надо написать вместо xxx, чтобы код работал?
+props.id
 
 _________
 import React, {useState} from 'react';
@@ -923,6 +926,10 @@ ReactDOM.render(
 );
 
 // Что надо написать вместо xxx, чтобы код работал?
+
+() => props.deleteUser(props.id) wrong version
+
+deleteUser - i think this is the right version
 ____
 
 import React, {useState, MouseEvent} from 'react';
@@ -957,7 +964,9 @@ ReactDOM.render(
 // Что надо написать вместо ххх, чтобы Вас не направило на страницу Youtube
 // при клике по ссылке?
 
+e.preventDefault()
 
+------------------------------------------------------------
 import React, {useState, MouseEvent} from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
@@ -996,6 +1005,8 @@ ReactDOM.render(
 // Что надо написать вместо ххх, чтобы данные из формы
 // не отправлялись на сервер и страница не перезагружалась
 // при клике по кнопке?
+e.preventDefault()
+________________________________________________________________________________________________________________________
 
 
 import React, {useState, MouseEvent, ChangeEvent} from 'react';
@@ -1020,6 +1031,8 @@ ReactDOM.render(
 );
 // Что надо написать вместо ххх, чтобы правильно типизировать
 // параметр функции?
+ChangeEvent<HTMLInputElement>
+________________________________________________________________________________________________________________________
 
 
 import React, {useState, MouseEvent, ChangeEvent} from 'react';
@@ -1044,6 +1057,8 @@ ReactDOM.render(
 );
 // Что надо написать вместо ххх, чтобы инпут был контролируемым?
 
+value={userName}
+________________________________________________________________________________________________________________________
 import React, {useState, MouseEvent, ChangeEvent} from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
@@ -1073,6 +1088,8 @@ ReactDOM.render(
 // Что надо написать вместо ххх,
 // чтобы после вывода текста в параграф содержимое формы ввода очищалось?
 
+setUserName('')
+________________________________________________________________________________________________________________________
 import React, {useState, MouseEvent, ChangeEvent} from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
@@ -1108,6 +1125,8 @@ ReactDOM.render(
 // Что надо написать вместо ххх,
 // чтобы при потере инпутом фокуса добавлялась заметка?
 
+onBlur
+________________________________________________________________________________________________________________________
 
 import React, {useState, MouseEvent, ChangeEvent} from 'react';
 import ReactDOM from 'react-dom';
@@ -1148,7 +1167,9 @@ ReactDOM.render(
 // Что надо написать вместо ххх,
 // чтобы при клике список заметок очищался?
 
+() => setNotes([])
 
+________________________________________________________________________________________________________________________
 Итоговый
 
 type UserPropsType = {
@@ -1467,3 +1488,233 @@ ReactDOM.render(
 
 
 
+_____________________________________________________________________ tuesday week 1 ___________________________________
+
+import React, {useState, MouseEvent} from 'react';
+import ReactDOM from 'react-dom';
+import './index.css';
+
+function ColorButton() {
+const [isColored, setIsColored] = useState<boolean>(false)
+return (
+<button
+style={{ backgroundColor: `${ isColored === true ? "red": ""}`}}
+onClick={()=>setIsColored(true)}
+>
+Меняю цвет по клику
+</button>
+)
+}
+
+
+ReactDOM.render(
+<ColorButton/>, document.getElementById('root')
+);
+
+// Что надо написать вместо XXX, чтобы при клике кнопка становилась красной? 
+
+isColored
+
+import React, {useState} from 'react';
+import ReactDOM from 'react-dom';
+import './index.css';
+
+function PasswordChecker() {
+const [password, setPassword] = useState<string>("")
+return (
+<main>
+<p>Your password must have more than 8 charters!</p>
+<input
+placeholder={"Enter your password"}
+value={password}
+onChange={e => setPassword(e.currentTarget.value)}
+type={"password"}
+/>
+{XXX < 9 && <p style={{color: "red"}}>The password is too short!</p>}
+</main>
+)
+}
+
+ReactDOM.render(
+<PasswordChecker/>, document.getElementById('root')
+);
+
+// Что надо вставить вместо XXX, чтобы код работал нормально? password.length
+
+import React, { ChangeEvent, useState } from 'react';
+import ReactDOM from 'react-dom';
+import './index.css';
+
+function LongCommentChecker() {
+const minSizeComment = 5
+const [isCommentReady, setIsCommentReady] = useState<boolean>(false)
+const [comment, setComment] = useState<string>('')
+
+    const onClickSendComment = () => {
+        if (comment.length > minSizeComment) {
+            setComment('')
+        }
+    }
+    const onChangeHandler = (e: ChangeEvent<HTMLTextAreaElement>) => {
+        const newComment = e.currentTarget.value
+        if (newComment.length > minSizeComment) {
+            setIsCommentReady(true)
+        } else {
+            setIsCommentReady(false)
+        }
+        setComment(newComment)
+    }
+
+    return (
+        <main>
+            <textarea
+                placeholder={'Your comment must have more than 5 charters'}
+                value={comment}
+                onChange={onChangeHandler}
+            />
+            <div>
+                <button
+                    disabled={XXX}
+                    onClick={onClickSendComment}>
+                    Send comment
+                </button>
+            </div>
+        </main>
+    )
+}
+
+ReactDOM.render(<LongCommentChecker/>, document.getElementById('root'));
+
+// Что нужно написать вместо XXX, чтобы кнопка отправки комментария отрабатывала верно:
+// первоначально кнопка должна быть в состоянии disable, а после успешного выполнения условия
+// (комментарий должен быть больше 5 символов) должна раздизаблиться.
+// ❗ Ответ необходимо дать на основании данных (переменных), которые уже есть в коде !isCommentReady
+
+import React, {ChangeEvent, useState} from 'react';
+import ReactDOM from 'react-dom';
+import './index.css';
+
+function Colorize() {
+
+const [color, setColor] = useState<string>("black")
+const colors = ["red", "yellow", "green", "blue", "violet", "chartreuse"]
+
+const styles = {
+width: "100px",
+height: "100px",
+borderRadius: "50%",
+backgroundColor: "black"
+}
+
+const getColor = (colors: string[]) => {
+const nextColor = colors[Math.floor(Math.random() * colors.length)]
+return nextColor
+}
+
+return (
+<main>
+<div style={{...styles, backgroundColor: color}}/>
+<div>
+<button
+onClick={() => setColor(XXX)}
+>
+Get random color
+</button>
+</div>
+</main>
+)
+}
+
+ReactDOM.render(
+<Colorize/>, document.getElementById('root')
+);
+// Что надо вставить вместо XXX, чтобы круг менял цвет по клику? getColor(colors)
+
+import React, { ChangeEvent, useState } from 'react';
+import ReactDOM from 'react-dom';
+import './index.css';
+
+type UserType = {
+id: number
+name: string
+personalData: PersonalDataType
+}
+type PersonalDataType = {
+gender: string
+age: number
+technologies: Array<TechnologiesType>
+}
+type TechnologiesType = 'HTML' | 'CSS' | 'React' | 'JS/TS' | 'Redux'
+
+function UsersList() {
+
+    const [users, setUsers] = useState<Array<UserType>>([
+        {
+            id: 1,
+            name: 'Bob',
+            personalData: {
+                gender: 'male',
+                age: 23,
+                technologies: ['HTML', 'CSS', 'React', 'JS/TS', 'Redux']
+            }
+        },
+        {
+            id: 2,
+            name: 'Alex',
+            personalData: {
+                gender: 'male',
+                age: 21,
+                technologies: ['HTML', 'CSS', 'React']
+            }
+        },
+        {
+            id: 3,
+            name: 'Ann',
+            personalData: {
+                gender: 'female',
+                age: 26,
+                technologies: ['HTML', 'CSS', 'JS/TS']
+            }
+        },
+        {
+            id: 4,
+            name: 'Helen',
+            personalData: {
+                gender: 'female',
+                age: 31,
+                technologies: ['HTML', 'CSS']
+            }
+        },
+        {
+            id: 5,
+            name: 'Donald',
+            personalData: {
+                gender: 'male',
+                age: 28,
+                technologies: ['React', 'JS/TS', 'Redux']
+            }
+        },
+    ])
+
+
+    return <ul>
+        {users.map(u => {
+            return (
+                u.XXX.length >= 5
+                    ? <li key={u.id}>
+                        {`User ${u.name}. ${u.personalData.age}. Ready to work.`}
+                    </li>
+                    : <li key={u.id}>
+                        {`User ${u.name}. ${u.personalData.age}. `}
+                    </li>)
+        })}
+    </ul>
+}
+
+ReactDOM.render(
+<UsersList/>, document.getElementById('root')
+);
+// Те пользователи, у которых в стэке пять и более технологий, должны в списке
+// быть отмечены, как готовые к работе.
+// Что надо вставить вместо XXX, чтобы код работал нормально?  personalData.technologies
+________________________________________________________________________________________________________________________
