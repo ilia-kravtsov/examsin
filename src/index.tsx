@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react'
 import ReactDOM from 'react-dom/client';
-import { applyMiddleware, combineReducers, legacy_createStore as createStore } from 'redux'
-import { Provider, TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux'
+import { applyMiddleware, combineReducers, legacy_createStore as createStore, Dispatch } from 'redux'
 import thunk, { ThunkAction, ThunkDispatch } from 'redux-thunk'
-import axios from 'axios';
+import { Provider, TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux'
+import axios, { AxiosError } from 'axios'
 
-// Types
+// TYPES
 type TodoType = {
     id: string;
     title: string;
@@ -15,65 +15,103 @@ type TodoType = {
     completed: boolean;
 }
 
-// Api
+type UserType = {
+    id: string;
+    name: string;
+    age: number;
+}
+
+type UsersResponseType = {
+    items: UserType[]
+    totalCount: number
+}
+
+
+// API
 const instance = axios.create({baseURL: 'https://exams-frontend.kimitsu.it-incubator.ru/api/'})
 
-const todosAPI = {
+const api = {
     getTodos() {
         return instance.get<TodoType[]>('todos')
     },
-    changeTodoStatus(id: string, completed: boolean) {
-        return instance.put(`todos/${id}`, {completed})
-    }
+    getUsers() {
+        return instance.get<UsersResponseType>('users')
+    },
 }
 
 
 // Reducer
-const initState = [] as TodoType[]
+const initState = {
+    isLoading: false,
+    error: null as string | null,
+    todos: [] as TodoType[],
+    users: [] as UserType[],
+}
 
 type InitStateType = typeof initState
 
-const todosReducer = (state: InitStateType = initState, action: ActionsType) => {
+const appReducer = (state: InitStateType = initState, action: ActionsType): InitStateType => {
     switch (action.type) {
-        case 'TODOS/GET-TODOS':
-            return action.todos
-
-        case 'TODOS/CHANGE-TODO-STATUS':
-            return state.map((t) => {
-                if (t.id === action.todo.id) {
-                    return {...t, completed: action.todo.completed}
-                } else {
-                    return t
-                }
-            })
-
+        case 'APP/GET-TODOS':
+            return {...state, todos: action.todos}
+        case 'APP/GET-USERS':
+            return {...state, users: action.users}
+        case 'APP/IS-LOADING':
+            return {...state, isLoading: action.isLoading}
+        case 'APP/SET-ERROR':
+            return {...state, error: action.error}
         default:
             return state
     }
 }
 
-const getTodosAC = (todos: TodoType[]) => ({type: 'TODOS/GET-TODOS', todos} as const)
-const changeTodoStatusAC = (todo: TodoType) => ({type: 'TODOS/CHANGE-TODO-STATUS', todo} as const)
-type ActionsType = ReturnType<typeof getTodosAC> | ReturnType<typeof changeTodoStatusAC>
+const getUsersAC = (users: UserType[]) => ({type: 'APP/GET-USERS', users} as const)
+const getTodosAC = (todos: TodoType[]) => ({type: 'APP/GET-TODOS', todos} as const)
+const setLoadingAC = (isLoading: boolean) => ({type: 'APP/IS-LOADING', isLoading} as const)
+const setError = (error: string | null) => ({type: 'APP/SET-ERROR', error} as const)
+
+type ActionsType =
+    | ReturnType<typeof getUsersAC>
+    | ReturnType<typeof getTodosAC>
+    | ReturnType<typeof setLoadingAC>
+    | ReturnType<typeof setError>
+
+
+// Utils functions
+function baseSuccessHandler<T>(dispatch: Dispatch, actionCreator: Function, data: T) {
+    dispatch(actionCreator(data))
+    dispatch(setLoadingAC(false))
+}
 
 // Thunk
 const getTodosTC = (): AppThunk => (dispatch) => {
-    todosAPI.getTodos()
+    dispatch(setLoadingAC(true))
+    api.getTodos()
         .then((res) => {
-            dispatch(getTodosAC(res.data))
+            baseSuccessHandler<TodoType[]>(dispatch, getTodosAC, res.data)
+        })
+        .catch((e: AxiosError) => {
+            dispatch(setError(e.message))
+            dispatch(setLoadingAC(false))
         })
 }
 
-const changeTodoStatusTC = (id: string, completed: boolean): AppThunk => (dispatch) => {
-    todosAPI.changeTodoStatus(id, completed)
+const getUsersTC = (): AppThunk => (dispatch) => {
+    dispatch(setLoadingAC(true))
+    api.getUsers()
         .then((res) => {
-            dispatch(changeTodoStatusAC(res.data))
+            console.log(res.data.items)
+            baseSuccessHandler<UserType[]>(dispatch, getUsersAC, res.data.items)
+        })
+        .catch((e: AxiosError) => {
+            dispatch(setError(e.message))
+            dispatch(setLoadingAC(false))
         })
 }
 
 // Store
 const rootReducer = combineReducers({
-    todos: todosReducer,
+    app: appReducer,
 })
 
 const store = createStore(rootReducer, applyMiddleware(thunk))
@@ -83,48 +121,96 @@ type AppThunk<ReturnType = void> = ThunkAction<ReturnType, RootState, unknown, A
 const useAppDispatch = () => useDispatch<AppDispatch>()
 const useAppSelector: TypedUseSelectorHook<RootState> = useSelector
 
-// App
+
+// COMPONENTS
+// Loader
+export const Loader = () => {
+    return (
+        <h1>Loading ...</h1>
+    )
+}
+
 const App = () => {
+    return (
+        <>
+            <h1>✅Todos & 🙂Users</h1>
+            <div style={{ display: 'flex', justifyContent: 'space-evenly' }}>
+                <Todos/>
+                <Users/>
+            </div>
+        </>
+    )
+}
+
+const Todos = () => {
     const dispatch = useAppDispatch()
-    const todos = useAppSelector(state => state.todos)
+    const todos = useAppSelector(state => state.app.todos)
+    const error = useAppSelector(state => state.app.error)
+    const isLoading = useAppSelector(state => state.app.isLoading)
 
     useEffect(() => {
         dispatch(getTodosTC())
     }, [])
 
-    const changeStatusHandler = (id: string, completed: boolean) => {
-        dispatch(changeTodoStatusTC(id, completed))
-    };
+    return (
+        <div>
+            <h2>✅ Список тудулистов</h2>
+            {!!error && <h2 style={{color: 'red'}}>{error}</h2>}
+            {isLoading && <Loader/>}
+            {
+                todos.map((t) => {
+                    return (
+                        <div style={t.completed ? {color: 'grey'} : {}} key={t.id}>
+                            <input type="checkbox" checked={t.completed}/>
+                            <b>Описание</b>: {t.title}
+                        </div>
+                    )
+                })
+            }
+        </div>
+    )
+}
+
+const Users = () => {
+    const dispatch = useAppDispatch()
+    const users = useAppSelector(state => state.app.users)
+    const error = useAppSelector(state => state.app.error)
+    const isLoading = useAppSelector(state => state.app.isLoading)
+
+    useEffect(() => {
+        dispatch(getUsersTC())
+    }, [])
 
     return (
-        <>
-            <h2>✅ Список тудулистов</h2>
-            {
-                todos.length ?
-                    todos.map((t) => {
+        <div>
+            <h2>🙂 Список юзеров</h2>
+            {!!error && <h2 style={{color: 'red'}}>{error}</h2>}
+            {isLoading && <Loader/>}
+            <div>
+                {
+                    users.map(u => {
                         return (
-                            <div style={t.completed ? {color: 'grey'} : {}} key={t.id}>
-                                <input type="checkbox"
-                                       checked={t.completed}
-                                       onChange={() => changeStatusHandler(t.id, !t.completed)}
-                                />
-                                <b>Описание</b>: {t.title}
+                            <div key={u.id}>
+                                <b>name</b>:{u.name} - <b>age</b>:{u.age}
                             </div>
                         )
                     })
-                    : <h2>Тудулистов нету 😥</h2>
-            }
-        </>
+                }</div>
+        </div>
     )
 }
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 root.render(<Provider store={store}> <App/></Provider>)
 
-// 📜 Описание:
-// При загрузке приложения вы должны увидеть список тудулистов,
-// но из-за невнимательности была допущена ошибка.
-// Найдите и исправьте ошибку.
-// Исправленную версию строки напишите в качестве ответа.
 
-// 🖥 Пример ответа: type InitStateType = typeof initState
+// 📜 Описание:
+// Перед вами список тудулистов и пользователей, которые находятся в постоянной загрузке.
+// Откройте network и вы увидите что запросы на сервер уходят и возвращаются с хорошими данными,
+// но вместо этого пользователь видит на экране Loader.
+// Для обработки успешного результата написана утилитная функция baseSuccessHandler.
+// Ваша задача воспользоваться этой функцией отобразить Todos и Users
+// Что нужно написать вместо XXX и YYY, чтобы реализовать данную задачу?
+// Ответ дайте через пробел.
+
+// 🖥 Пример ответа: dispatch(baseSuccessHandler(1,2,3))  dispatch(baseSuccessHandler(3,2,1)
